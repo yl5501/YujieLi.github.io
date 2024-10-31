@@ -1,0 +1,25 @@
+---
+title: "Welcone to Yujie's website"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+# This is Yujie's website
+
+## Links to other websites
+* [My Github](https://github.com/yl5501)
+* [My Linkedin](https://www.linkedin.com/in/yujieli1103/)
+* E-mail: [yl5501@cumc.columbia.edu](mailto:yl5501@cumc.columbia.edu)
+
+
+![](https://media.giphy.com/media/drXGoW1iudhKw/giphy.gif)
+
+## Link to my academic and professional experience
+[About me](about.html)
+
+## Link to Problem 2
+[Problem 2](plotly.html)
+
+

@@ -1,0 +1,117 @@
+---
+title: "Problem 2"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+# Let's make some plots for the dataset NY NOAA
+
+
+```{r}
+options(repos = c(CRAN = "https://cloud.r-project.org"))
+
+```
+
+```{r}
+options(repos = c(CRAN = "https://cloud.r-project.org"))
+install.packages("plotly")
+```
+
+
+
+```{r}
+install.packages("flexdashboard")
+install.packages("p8105.datasets")
+install.packages("lubridate")
+
+library(tidyverse)
+library(plotly)
+library(flexdashboard)
+library(p8105.datasets)
+library(dplyr)
+
+
+```
+
+
+```{r}
+data("ny_noaa")
+
+ny_noaa_cleaned = ny_noaa |>
+  mutate(
+    month = month(date, label = TRUE, abbr = TRUE),
+    tmax = as.numeric(tmax),  
+    tmin = as.numeric(tmin)    
+  ) |>
+  filter(!is.na(tmax) & !is.na(tmin)) |>
+  dplyr::sample_frac(0.01)
+
+# Convert tmax and tmin from tenths of degrees to degrees Celsius
+ny_noaa_filtered <- ny_noaa_cleaned |>
+  mutate(
+    tmax = tmax / 10,
+    tmin = tmin / 10,
+    temp_range = tmax - tmin  # Calculate temperature range in degrees Celsius
+  )
+
+```
+
+## Flexdashboard Layout with Three Plots
+
+Here’s the code for the scatterplot, boxplot, and bar plot.
+
+## Scatterplot of Temperature Range by Month
+```{r}
+ny_noaa_filtered |>
+  plot_ly(
+    x = ~month, 
+    y = ~temp_range, 
+    type = "scatter", 
+    mode = "markers", 
+    color = ~month, 
+    colors = "Blues",
+    marker = list(opacity = 0.5)
+  ) |>
+  layout(title = "Temperature Range by Month",
+         xaxis = list(title = "Month"),
+         yaxis = list(title = "Temperature Range (°C)"))  # Update y-axis label
+```
+## Boxplot of Maximum Temperature by Month
+```{r}
+ny_noaa_filtered |>
+  plot_ly(
+    x = ~month, 
+    y = ~tmax, 
+    type = "box", 
+    color = ~month, 
+    colors = "Reds" 
+  ) |>
+  layout(title = "Max Temperature Distribution by Month",
+         yaxis = list(title = "Max Temperature (tenths of degrees C)"))
+
+```
+
+
+## Bar Plot of Average Precipitation by Month
+```{r}
+ny_noaa_cleaned |>
+  group_by(month) |>
+  summarize(mean_prcp = mean(prcp, na.rm = TRUE)) |>
+  plot_ly(
+    x = ~month, 
+    y = ~mean_prcp, 
+    type = "bar", 
+    color = ~month, 
+    colors = "Purples"
+  ) |>
+  layout(title = "Average Precipitation by Month",
+         xaxis = list(title = "Month"),
+         yaxis = list(title = "Average Precipitation (tenths of mm)"))
+
+```
+
+
+
+
